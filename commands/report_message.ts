@@ -2,6 +2,7 @@ import {
 	type API,
 	type APIMessageApplicationCommandGuildInteraction,
 	ApplicationCommandType,
+	MessageType,
 	Utils,
 } from "@discordjs/core";
 import { type MessageContextMenuCommand } from "../types.d.ts";
@@ -10,6 +11,7 @@ import {
 	deferReplyInteraction,
 	fetchData,
 	getRequiredEnv,
+	isGuildChannel,
 	replyInteraction,
 } from "../utils.ts";
 import { messageLink, roleMention } from "@discordjs/formatters";
@@ -20,12 +22,15 @@ export default {
 		type: ApplicationCommandType.Message,
 	},
 	execute(interaction) {
-		if (Utils.isApplicationCommandGuildInteraction(interaction)) {
+		if (
+			isGuildChannel(interaction.channel) &&
+			Utils.isApplicationCommandGuildInteraction(interaction)
+		) {
 			queueMicrotask(() => report(api, interaction));
 			return deferReplyInteraction(true);
 		} else {
 			return replyInteraction({
-				content: "this command can only initialized in a guild",
+				content: "This command can only initialized in a guild",
 			});
 		}
 	},
@@ -40,39 +45,20 @@ async function report(
 	const reportedUser = reportedMessage.author;
 	const reporter = interaction.member.user;
 
-	if (reportedUser.bot) {
+	if (reportedUser.bot || reportedMessage.type !== MessageType.Default) {
 		return await api.interactions.editReply(
 			interaction.application_id,
 			interaction.token,
-			{ content: "You can't report a message from bots" },
+			{ content: "You can't report a system or bot message" },
 		);
 	} else {
-		const thread = await api.channels.createForumThread(
-			getRequiredEnv("REPORT_CHANNEL"),
-			{
-				name: `A message report from ${
-					interaction.channel.name ?? "unknown channel"
-				}`,
-				message: {
-					content: `${
-						roleMention(getRequiredEnv("MODERATOR_ROLE"))
-					}\n\nReported user: ${reportedMessage.author.username} (${reportedUser.id})\nReported by: ${reporter.username} (${reporter.id})\n\n${
-						messageLink(
-							reportedMessage.channel_id,
-							reportedMessage.id,
-						)
-					}`,
-				},
-			},
-		);
-
 		const fileDatas = await Promise.all(
 			reportedMessage.attachments.map((attachment) =>
 				fetchData(attachment.url)
 			),
 		);
 
-		await api.webhooks.execute(
+		const postedReport = await api.webhooks.execute(
 			getRequiredEnv("REPORT_WEBHOOK_ID"),
 			getRequiredEnv("REPORT_WEBHOOK_TOKEN"),
 			{
@@ -86,10 +72,27 @@ async function report(
 					name: attachment.filename,
 					data: fileDatas[index],
 				})),
-				thread_id: thread.id,
+				thread_name:
+					`A message report from ${interaction.channel.name}`,
 				wait: true,
 			},
 		);
+
+		const reportInfo = await api.channels.createMessage(
+			postedReport.channel_id,
+			{
+				content: `${
+					roleMention(getRequiredEnv("MODERATOR_ROLE"))
+				}\n\nReported user: ${reportedMessage.author.username} (${reportedUser.id})\nReported by: ${reporter.username} (${reporter.id})\n\n${
+					messageLink(
+						reportedMessage.channel_id,
+						reportedMessage.id,
+					)
+				}`,
+			},
+		);
+
+		await api.channels.pinMessage(postedReport.channel_id, reportInfo.id);
 
 		await api.interactions.editReply(
 			interaction.application_id,

@@ -2,16 +2,11 @@ import { STATUS_CODE } from "@std/http/status";
 import tweetnacl from "tweetnacl";
 import { decodeHex } from "@std/encoding/hex";
 import {
-	API,
 	type APIInteraction,
-	APIInteractionResponseChannelMessageWithSource,
-	type APIInteractionResponsePong,
 	ApplicationCommandType,
-	InteractionResponseType,
 	InteractionType,
 	MessageFlags,
 } from "@discordjs/core";
-import { REST } from "@discordjs/rest";
 import manifest from "./manifest.gen.ts";
 import * as utils from "./utils.ts";
 
@@ -42,44 +37,27 @@ async function handler(request: Request) {
 			const token = utils.getRequiredEnv("TOKEN");
 
 			if (token) {
-				const api = new API(new REST().setToken(token));
 				const interaction: APIInteraction = JSON.parse(body);
 
 				switch (interaction.type) {
 					case InteractionType.Ping: {
-						await api.applicationCommands
+						await utils.api.applicationCommands
 							.bulkOverwriteGlobalCommands(
 								interaction.application_id,
 								manifest.commands.map((ctx) => ctx.data),
 							);
-						return Response.json(
-							{
-								type: InteractionResponseType.Pong,
-							} satisfies APIInteractionResponsePong,
-						);
+						return utils.pongInteractionResponse;
 					}
 					case InteractionType.ApplicationCommand: {
 						const commandName = interaction.data.name;
-						const commandNotFound = Response.json(
-							{
-								type: InteractionResponseType
-									.ChannelMessageWithSource,
-								data: {
-									content: "command not found.",
-									flags: MessageFlags.Ephemeral,
-								},
-							} satisfies APIInteractionResponseChannelMessageWithSource,
-						);
-						const unknownCommandType = Response.json(
-							{
-								type: InteractionResponseType
-									.ChannelMessageWithSource,
-								data: {
-									content: "unknown command type.",
-									flags: MessageFlags.Ephemeral,
-								},
-							} satisfies APIInteractionResponseChannelMessageWithSource,
-						);
+						const commandNotFound = utils.replyInteraction({
+							content: "command not found.",
+							flags: MessageFlags.Ephemeral,
+						});
+						const unknownCommandType = utils.replyInteraction({
+							content: "unknown command type.",
+							flags: MessageFlags.Ephemeral,
+						});
 
 						if (utils.isChatInputInteraction(interaction)) {
 							const command = utils.findCommand(
@@ -118,16 +96,10 @@ async function handler(request: Request) {
 					case InteractionType.MessageComponent:
 					case InteractionType.ApplicationCommandAutocomplete:
 					case InteractionType.ModalSubmit: {
-						return Response.json(
-							{
-								type: InteractionResponseType
-									.ChannelMessageWithSource,
-								data: {
-									content: "not implemented, yet.",
-									flags: MessageFlags.Ephemeral,
-								},
-							} satisfies APIInteractionResponseChannelMessageWithSource,
-						);
+						return utils.replyInteraction({
+							content: "not implemented, yet.",
+							flags: MessageFlags.Ephemeral,
+						});
 					}
 				}
 			} else {
