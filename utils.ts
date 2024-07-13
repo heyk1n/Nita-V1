@@ -1,9 +1,9 @@
 import {
 	API,
 	type APIApplicationCommandInteraction,
+	type APIChannel,
 	type APIChatInputApplicationCommandInteraction,
 	type APIGuildChannelResolvable,
-	type APIGuildInteraction,
 	type APIInteractionResponseCallbackData,
 	type APIInteractionResponseDeferredChannelMessageWithSource,
 	type APIInteractionResponsePong,
@@ -106,7 +106,7 @@ export const pongInteractionResponse = Response.json(
 );
 
 export function isGuildChannel(
-	channel: APIGuildInteraction["channel"],
+	channel: Partial<APIChannel>,
 ): channel is APIGuildChannelResolvable {
-	return Reflect.has(channel!, "guild_id");
+	return Reflect.has(channel, "guild_id");
 }
