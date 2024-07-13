@@ -2,8 +2,11 @@ import {
 	API,
 	type APIApplicationCommandInteraction,
 	type APIChatInputApplicationCommandInteraction,
+	type APIGuildChannelResolvable,
+	type APIGuildInteraction,
 	type APIInteractionResponseCallbackData,
 	type APIInteractionResponseDeferredChannelMessageWithSource,
+	type APIInteractionResponsePong,
 	type APIMessageApplicationCommandInteraction,
 	type APIUserApplicationCommandInteraction,
 	ApplicationCommandType,
@@ -97,4 +100,13 @@ export function replyInteraction(
 		type: InteractionResponseType.ChannelMessageWithSource,
 		data,
 	});
+}
+export const pongInteractionResponse = Response.json(
+	{ type: InteractionResponseType.Pong } satisfies APIInteractionResponsePong,
+);
+
+export function isGuildChannel(
+	channel: APIGuildInteraction["channel"],
+): channel is APIGuildChannelResolvable {
+	return Reflect.has(channel!, "guild_id");
 }
