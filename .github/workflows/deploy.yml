@@ -38,4 +38,4 @@ jobs:
 
       - name: Deploy (Push)
         run: |
-          deployctl deploy --project=${{ secrets.PROD_PROJECT_ID }} --env=PUBLIC_KEY=${{ secrets.PROD_PUBLIC_KEY }},TOKEN=${{ secrets.PROD_TOKEN }},MODERATOR_ROLE=${{ secrets.PROD_MODERATOR_ROLE }},REPORT_CHANNEL=${{ secrets.PROD_REPORT_CHANNEL }},REPORT_WEBHOOK_ID=${{ secrets.PROD_REPORT_WEBHOOK_ID }},REPORT_WEBHOOK_TOKEN=${{ secrets.PROD_REPORT_WEBHOOK_TOKEN }}
+          deployctl deploy --project=${{ secrets.PROD_PROJECT_ID }} --env=PUBLIC_KEY=${{ secrets.PROD_PUBLIC_KEY }} --env=TOKEN=${{ secrets.PROD_TOKEN }} --env=MODERATOR_ROLE=${{ secrets.PROD_MODERATOR_ROLE }} --env=REPORT_CHANNEL=${{ secrets.PROD_REPORT_CHANNEL }} --env=REPORT_WEBHOOK_ID=${{ secrets.PROD_REPORT_WEBHOOK_ID }} --env=REPORT_WEBHOOK_TOKEN=${{ secrets.PROD_REPORT_WEBHOOK_TOKEN }}
