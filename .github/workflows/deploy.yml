@@ -35,8 +35,8 @@ jobs:
       - name: Install deployctl
         run: deno install -Arf jsr:@deno/deployctl@1.12.0
 
-      - name: Code check
-        run: deno task ok
+      - name: Run build
+        run: deno task build && deno task ok
 
       - name: Deploy (Push)
         run: deployctl deploy --project=${{ secrets.PROD_PROJECT_ID }} --env-file=${{ secrets.PROD_ENV }}
