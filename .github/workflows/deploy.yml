@@ -8,9 +8,7 @@
 
 name: Deno
 
-on:
-  push:
-    branches: ["main"]
+on: [push]
 
 permissions:
   contents: read
@@ -39,4 +37,5 @@ jobs:
         run: deno task build && deno task ok
 
       - name: Deploy (Push)
-        run: deployctl deploy --project=${{ secrets.PROD_PROJECT_ID }} --env-file=${{ secrets.PROD_ENV }}
+        run: |
+          deployctl deploy --project=${{ secrets.PROD_PROJECT_ID }} --env-file=${{ secrets.PROD_ENV }}
