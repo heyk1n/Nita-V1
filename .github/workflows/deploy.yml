@@ -38,4 +38,4 @@ jobs:
 
       - name: Deploy (Push)
         run: |
-          deployctl deploy --project=${{ secrets.PROD_PROJECT_ID }} --env=PUBLIC_KEY=${{ secrets.PROD_PUBLIC_KEY }},TOKEN=${{ secrets.TOKEN }}
+          deployctl deploy --project=${{ secrets.PROD_PROJECT_ID }} --env=PUBLIC_KEY=${{ secrets.PROD_PUBLIC_KEY }},TOKEN=${{ secrets.PROD_TOKEN }}
