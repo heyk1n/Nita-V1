@@ -25,8 +25,8 @@
 		]
 	},
 	"tasks": {
-		"build": "deno run --allow-run --allow-read --allow-write build.ts",
-		"dev": "deno task build && deno run --allow-net --allow-env --watch=commands/,deno.json,main.ts,manifest.gen.ts,utils.ts, --env main.ts",
+		"build": "deno run --allow-run --allow-read --allow-write --frozen build.ts",
+		"dev": "deno task build && deno test --allow-net --allow-env --env main.ts",
 		"ok": "deno lint && deno fmt --check && deno check main.ts"
 	}
 }
