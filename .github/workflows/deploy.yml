@@ -36,6 +36,10 @@ jobs:
       - name: Run build
         run: deno task build && deno task ok
 
+      - name: Deploy (PR)
+        run: |
+          deployctl deploy --project=${{ secrets.DEV_PROJECT_ID }} --env=PUBLIC_KEY=${{ secrets.DEV_PUBLIC_KEY }} --env=TOKEN=${{ secrets.DEV_TOKEN }} --env=MODERATOR_ROLE=${{ secrets.DEV_MODERATOR_ROLE }} --env=REPORT_CHANNEL=${{ secrets.DEV_REPORT_CHANNEL }} --env=REPORT_WEBHOOK_ID=${{ secrets.DEV_REPORT_WEBHOOK_ID }} --env=REPORT_WEBHOOK_TOKEN=${{ secrets.DEV_REPORT_WEBHOOK_TOKEN }}
+
       - name: Deploy (Push)
         run: |
           deployctl deploy --project=${{ secrets.PROD_PROJECT_ID }} --env=PUBLIC_KEY=${{ secrets.PROD_PUBLIC_KEY }} --env=TOKEN=${{ secrets.PROD_TOKEN }} --env=MODERATOR_ROLE=${{ secrets.PROD_MODERATOR_ROLE }} --env=REPORT_CHANNEL=${{ secrets.PROD_REPORT_CHANNEL }} --env=REPORT_WEBHOOK_ID=${{ secrets.PROD_REPORT_WEBHOOK_ID }} --env=REPORT_WEBHOOK_TOKEN=${{ secrets.PROD_REPORT_WEBHOOK_TOKEN }}
