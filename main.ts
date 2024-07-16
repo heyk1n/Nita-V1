@@ -41,7 +41,7 @@ async function handler(request: Request) {
 
 				switch (interaction.type) {
 					case InteractionType.Ping: {
-						await utils.api.applicationCommands
+						await utils.defineApi().applicationCommands
 							.bulkOverwriteGlobalCommands(
 								interaction.application_id,
 								manifest.commands.map((ctx) => ctx.data),
