@@ -21,7 +21,7 @@
 			"deno.lock",
 			"main.ts",
 			"types.d.ts",
-			"utils.ts"
+			"utils/"
 		]
 	},
 	"tasks": {
