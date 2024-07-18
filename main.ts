@@ -9,6 +9,7 @@ import {
 } from "@discordjs/core";
 import manifest from "./manifest.gen.ts";
 import * as utils from "./utils/mod.ts";
+import { define } from "./utils/define.ts";
 
 async function handler(request: Request) {
 	const unauthorized = new Response("Invalid request", {
@@ -41,7 +42,7 @@ async function handler(request: Request) {
 
 				switch (interaction.type) {
 					case InteractionType.Ping: {
-						await utils.defineApi().applicationCommands
+						await define.api().applicationCommands
 							.bulkOverwriteGlobalCommands(
 								interaction.application_id,
 								manifest.commands.map((ctx) => ctx.data),

@@ -6,7 +6,6 @@ import {
 } from "@discordjs/core";
 import {
 	deferReplyInteraction,
-	defineApi,
 	fetchData,
 	getRequiredEnv,
 	isGuildChannel,
@@ -38,7 +37,7 @@ export default define.command({
 async function report(
 	interaction: APIMessageApplicationCommandGuildInteraction,
 ) {
-	const api = defineApi();
+	const api = define.api();
 
 	const reportedMessage =
 		interaction.data.resolved.messages[interaction.data.target_id];

@@ -4,6 +4,17 @@ import type {
 	MessageContextMenuCommand,
 	UserContextMenuCommand,
 } from "../types.d.ts";
+import { API } from "@discordjs/core";
+import { REST } from "@discordjs/rest";
+import { getRequiredEnv } from "./mod.ts";
+
+function api() {
+	return new API(
+		new REST().setToken(
+			getRequiredEnv("TOKEN"),
+		),
+	);
+}
 
 function command(command: ChatInputCommand): ChatInputCommand;
 function command(command: MessageContextMenuCommand): MessageContextMenuCommand;
@@ -16,4 +27,4 @@ function command(command: Command): Command {
 	}
 }
 
-export const define = { command };
+export const define = { api, command };
