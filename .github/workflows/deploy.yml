@@ -11,7 +11,7 @@ name: Deploy
 on:
   push:
     branches: [main]
-  pull_request:
+  pull_request_target:
     branches: [main]
 
 permissions:
@@ -41,7 +41,7 @@ jobs:
         run: deno task build && deno task ok
 
       - name: Deploy (PR)
-        if: ${{ github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request_target' }}
         run: |
           deployctl deploy --project=${{ secrets.DEV_PROJECT_ID }} --env=PUBLIC_KEY=${{ secrets.DEV_PUBLIC_KEY }} --env=TOKEN=${{ secrets.DEV_TOKEN }} --env=MODERATOR_ROLE=${{ secrets.DEV_MODERATOR_ROLE }} --env=REPORT_CHANNEL=${{ secrets.DEV_REPORT_CHANNEL }} --env=REPORT_WEBHOOK_ID=${{ secrets.DEV_REPORT_WEBHOOK_ID }} --env=REPORT_WEBHOOK_TOKEN=${{ secrets.DEV_REPORT_WEBHOOK_TOKEN }}
 
