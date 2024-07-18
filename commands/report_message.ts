@@ -12,7 +12,7 @@ import {
 	getRequiredEnv,
 	isGuildChannel,
 	replyInteraction,
-} from "../utils.ts";
+} from "../utils/mod.ts";
 import { messageLink, roleMention } from "@discordjs/formatters";
 
 export default {
