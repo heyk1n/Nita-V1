@@ -18,11 +18,13 @@ import {
 	type Command,
 	type MessageContextMenuCommand,
 	type UserContextMenuCommand,
-} from "./types.d.ts";
-import manifestGen from "./manifest.gen.ts";
+} from "../types.d.ts";
+import manifestGen from "../manifest.gen.ts";
 import { REST } from "@discordjs/rest";
 
-export const api = new API(new REST().setToken(getRequiredEnv("TOKEN")));
+export function defineApi() {
+	return new API(new REST().setToken(getRequiredEnv("TOKEN")));
+}
 
 export async function fetchData(url: URL | string) {
 	const response = await fetch(url);

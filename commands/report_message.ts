@@ -1,22 +1,21 @@
 import {
-	type API,
 	type APIMessageApplicationCommandGuildInteraction,
 	ApplicationCommandType,
 	MessageType,
 	Utils,
 } from "@discordjs/core";
-import { type MessageContextMenuCommand } from "../types.d.ts";
 import {
-	api,
 	deferReplyInteraction,
+	defineApi,
 	fetchData,
 	getRequiredEnv,
 	isGuildChannel,
 	replyInteraction,
-} from "../utils.ts";
+} from "../utils/mod.ts";
 import { messageLink, roleMention } from "@discordjs/formatters";
+import { define } from "../utils/define.ts";
 
-export default {
+export default define.command({
 	data: {
 		name: "Report",
 		type: ApplicationCommandType.Message,
@@ -26,7 +25,7 @@ export default {
 			isGuildChannel(interaction.channel) &&
 			Utils.isApplicationCommandGuildInteraction(interaction)
 		) {
-			queueMicrotask(() => report(api, interaction));
+			queueMicrotask(() => report(interaction));
 			return deferReplyInteraction(true);
 		} else {
 			return replyInteraction({
@@ -34,12 +33,13 @@ export default {
 			});
 		}
 	},
-} satisfies MessageContextMenuCommand;
+});
 
 async function report(
-	api: API,
 	interaction: APIMessageApplicationCommandGuildInteraction,
 ) {
+	const api = defineApi();
+
 	const reportedMessage =
 		interaction.data.resolved.messages[interaction.data.target_id];
 	const reportedUser = reportedMessage.author;
