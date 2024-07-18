@@ -4,7 +4,6 @@ import {
 	MessageType,
 	Utils,
 } from "@discordjs/core";
-import { type MessageContextMenuCommand } from "../types.d.ts";
 import {
 	deferReplyInteraction,
 	defineApi,
@@ -14,8 +13,9 @@ import {
 	replyInteraction,
 } from "../utils/mod.ts";
 import { messageLink, roleMention } from "@discordjs/formatters";
+import { define } from "../utils/define.ts";
 
-export default {
+export default define.command({
 	data: {
 		name: "Report",
 		type: ApplicationCommandType.Message,
@@ -33,7 +33,7 @@ export default {
 			});
 		}
 	},
-} satisfies MessageContextMenuCommand;
+});
 
 async function report(
 	interaction: APIMessageApplicationCommandGuildInteraction,
