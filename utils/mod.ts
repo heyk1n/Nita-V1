@@ -1,5 +1,4 @@
 import {
-	API,
 	type APIApplicationCommandInteraction,
 	type APIChannel,
 	type APIChatInputApplicationCommandInteraction,
@@ -20,11 +19,6 @@ import {
 	type UserContextMenuCommand,
 } from "../types.d.ts";
 import manifestGen from "../manifest.gen.ts";
-import { REST } from "@discordjs/rest";
-
-export function defineApi() {
-	return new API(new REST().setToken(getRequiredEnv("TOKEN")));
-}
 
 export async function fetchData(url: URL | string) {
 	const response = await fetch(url);
