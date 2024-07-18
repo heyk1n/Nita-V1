@@ -9,7 +9,11 @@ import { REST } from "@discordjs/rest";
 import { getRequiredEnv } from "./mod.ts";
 
 function api() {
-	return new API(new REST().setToken(getRequiredEnv("TOKEN")));
+	return new API(
+		new REST().setToken(
+			getRequiredEnv("TOKEN"),
+		),
+	);
 }
 
 function command(command: ChatInputCommand): ChatInputCommand;
