@@ -8,7 +8,7 @@ import {
 	MessageFlags,
 } from "@discordjs/core";
 import manifest from "./manifest.gen.ts";
-import * as utils from "./utils.ts";
+import * as utils from "./utils/mod.ts";
 
 async function handler(request: Request) {
 	const unauthorized = new Response("Invalid request", {
